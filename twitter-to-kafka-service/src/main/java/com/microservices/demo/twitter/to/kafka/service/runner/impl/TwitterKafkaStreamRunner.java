@@ -5,13 +5,16 @@ import com.microservices.demo.twitter.to.kafka.service.listener.TwitterKafkaStat
 import com.microservices.demo.twitter.to.kafka.service.runner.StreamRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import twitter4j.*;
+import twitter4j.auth.AccessToken;
 
 import javax.annotation.PreDestroy;
 import java.util.Arrays;
 
 @Component
+@ConditionalOnProperty(name = "twitter-to-kafka-service.enable-v2-tweets", havingValue = "false")
 public class TwitterKafkaStreamRunner implements StreamRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(TwitterKafkaStreamRunner.class);
@@ -29,6 +32,10 @@ public class TwitterKafkaStreamRunner implements StreamRunner {
     public void start() throws TwitterException {
         twitterStream = new TwitterStreamFactory().getInstance();
         twitterStream.addListener(twitterKafkaStatusListner);
+        //twitterStream.setOAuthConsumer("KeX2GRmEdiUBN29g7x6ZGAM6V",
+         //       "2FodD2FNAeqmEtazYvy3DL43mrV1xHGEqIq47Gp3YGaeW5AYec");
+        twitterStream.setOAuthAccessToken(new AccessToken("4978071-SlcHB5dKo64Pt9gIdBvaOu3D8cD5a4Swssqfmt9HDt",
+                "00xCdhjQdgNo19b2w8YDQLJeiWeVwumt885NQth6nBJk2"));
         addFilter();
     }
 
