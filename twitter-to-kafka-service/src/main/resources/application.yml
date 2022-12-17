@@ -6,6 +6,8 @@ twitter-to-kafka-service:
     - Spring
     - Elasticsearch
     - Ronaldo
+    - Messi
+    - Mbappe
   welcome-message:
     - Hello microservices, how do you do?
   enable-v1-tweets: false
