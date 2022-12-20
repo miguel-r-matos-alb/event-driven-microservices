@@ -18,6 +18,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.microservices.demo</groupId>
+            <artifactId>app-config-data</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
@@ -41,9 +46,12 @@
             <version>${json.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>compile</scope>
+            <groupId>com.microservices.demo</groupId>
+            <artifactId>kafka-admin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.microservices.demo</groupId>
+            <artifactId>kafka-producer</artifactId>
         </dependency>
     </dependencies>
 
