@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.kafka.retrytopic.RetryTopicConfiguration;
 
 import java.util.Arrays;
 
@@ -28,6 +29,7 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner {
 //        this.twitterToKafkaServiceConfigData = configData;
         streamRunner = runner;
         streamInitializer = initializer;
+//       RetryTopicConfiguration retryTopicConfiguration = null;
     }
 
     public static void main(String[] args) {
