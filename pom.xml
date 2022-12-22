@@ -43,7 +43,7 @@
 
 		<elastic.version>7.9.1</elastic.version>
 
-		<springdoc-openapi-ui.version>1.5.0</springdoc-openapi-ui.version>
+		<springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version>
 
 		<kafka-streams.version>2.6.0</kafka-streams.version>
 		<kafka-clients.version>2.6.0</kafka-clients.version>
@@ -123,6 +123,12 @@
 				<version>${spring-cloud-dependencies.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>io.github.classgraph</groupId>
+				<artifactId>classgraph</artifactId>
+				<version>4.8.139</version>
 			</dependency>
 
 			<dependency>
