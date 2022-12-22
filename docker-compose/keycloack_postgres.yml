@@ -16,7 +16,7 @@ services:
     networks:
       - ${GLOBAL_NETWORK:-pgsql}
   keycloak:
-    image: quay.io/keycloak/keycloak:legacy
+    image: quay.io/keycloak/keycloak:19.0.1
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
@@ -26,12 +26,16 @@ services:
       DB_PASSWORD: password
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
-      JAVA_OPTS: "-Djboss.http.port=9091"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      #JAVA_OPTS: "-Djboss.http.port=9091"
       # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
       #JDBC_PARAMS: "ssl=true"
     ports:
-      - 9091:9091
+      - 8080:8080
     depends_on:
       - postgres
     networks:
       - ${GLOBAL_NETWORK:-keycloack}
+    command:
+      - start-dev

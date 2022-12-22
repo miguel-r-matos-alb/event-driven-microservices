@@ -20,6 +20,8 @@ twitter-to-kafka-service:
   mock-max-tweet-length: 15
   mock-sleep-ms: 10000
 
+server:
+  port: 8082
 
 retry-config:
   initial-interval-ms: 1000
