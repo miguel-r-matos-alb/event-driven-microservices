@@ -1,80 +1,81 @@
-package com.microservices.demo.kafka.streams.service.security;
 
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
+        /*
+         * Copyright 2002-2022 the original author or authors.
+         *
+         * Licensed under the Apache License, Version 2.0 (the "License");
+         * you may not use this file except in compliance with the License.
+         * You may obtain a copy of the License at
+         *
+         *      https://www.apache.org/licenses/LICENSE-2.0
+         *
+         * Unless required by applicable law or agreed to in writing, software
+         * distributed under the License is distributed on an "AS IS" BASIS,
+         * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+         * See the License for the specific language governing permissions and
+         * limitations under the License.
+         */
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+        package com.microservices.demo.kafka.streams.service.security;
 
-import static com.microservices.demo.kafka.streams.service.Constants.NA;
+        import java.util.Collection;
 
+        import org.springframework.core.convert.converter.Converter;
+        import org.springframework.security.authentication.AbstractAuthenticationToken;
+        import org.springframework.security.core.GrantedAuthority;
+        import org.springframework.security.oauth2.jwt.Jwt;
+        import org.springframework.security.oauth2.jwt.JwtClaimNames;
+        import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+        import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+        import org.springframework.util.Assert;
 
-public class KafkaStreamsUserJwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
-    private static final String REALM_ACCESS_CLAIM = "realm_access";
-    private static final String ROLES_CLAIM = "roles";
-    private static final String SCOPE_CLAIM = "scope";
-    private static final String USERNAME_CLAIM = "preferred_username";
-    private static final String DEFAULT_ROLE_PREFIX = "ROLE_";
-    private static final String DEFAULT_SCOPE_PREFIX = "SCOPE_";
-    private static final String SCOPE_SEPARATOR = " ";
+        /**
+         * @author Rob Winch
+         * @author Josh Cummings
+         * @author Evgeniy Cheban
+         * @author Olivier Antoine
+         * @since 5.1
+         */
+        public class KafkaStreamsUserJwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private final KafkaStreamsUserDetailsService kafkaStreamsUserDetailsService;
+            private Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
-    public KafkaStreamsUserJwtConverter(KafkaStreamsUserDetailsService kafkaStreamsUserDetailsService) {
-        this.kafkaStreamsUserDetailsService = kafkaStreamsUserDetailsService;
-    }
+            private String principalClaimName = JwtClaimNames.SUB;
 
-    @Override
-    public AbstractAuthenticationToken convert(Jwt jwt) {
-        Collection<GrantedAuthority> authoritiesFromJwt = getAuthoritiesFromJwt(jwt);
-        return Optional.ofNullable(
-                kafkaStreamsUserDetailsService.loadUserByUsername(jwt.getClaimAsString(USERNAME_CLAIM)))
-                .map(userDetails -> {
-                    ((KafkaStreamsUser) userDetails).setAuthorities(authoritiesFromJwt);
-                    return new UsernamePasswordAuthenticationToken(userDetails, NA, authoritiesFromJwt);
-                })
-                .orElseThrow(() -> new BadCredentialsException("User could not be found!"));
-    }
+            private final KafkaStreamsUserDetailsService kafkaStreamsUserDetailsService;
 
-    private Collection<GrantedAuthority> getAuthoritiesFromJwt(Jwt jwt) {
-        return getCombinedAuthorities(jwt).stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
+            public KafkaStreamsUserJwtConverter(KafkaStreamsUserDetailsService kafkaStreamsUserDetailsService) {
+                this.kafkaStreamsUserDetailsService = kafkaStreamsUserDetailsService;
+            }
 
-    private Collection<String> getCombinedAuthorities(Jwt jwt) {
-        Collection<String> authorities = getRoles(jwt);
-        authorities.addAll(getScopes(jwt));
-        return authorities;
-    }
+            @Override
+            public final AbstractAuthenticationToken convert(Jwt jwt) {
+                Collection<GrantedAuthority> authorities = this.jwtGrantedAuthoritiesConverter.convert(jwt);
 
-    @SuppressWarnings("unchecked")
-    private Collection<String> getRoles(Jwt jwt) {
-        Object roles = ((Map<String, Object>) jwt.getClaims().get(REALM_ACCESS_CLAIM)).get(ROLES_CLAIM);
-        if (roles instanceof Collection) {
-            return ((Collection<String>) roles).stream()
-                    .map(authority -> DEFAULT_ROLE_PREFIX + authority.toUpperCase())
-                    .collect(Collectors.toList());
+                String principalClaimValue = jwt.getClaimAsString(this.principalClaimName);
+                return new JwtAuthenticationToken(jwt, authorities, principalClaimValue);
+            }
+
+            /**
+             * Sets the {@link Converter Converter&lt;Jwt, Collection&lt;GrantedAuthority&gt;&gt;}
+             * to use. Defaults to {@link JwtGrantedAuthoritiesConverter}.
+             * @param jwtGrantedAuthoritiesConverter The converter
+             * @since 5.2
+             * @see JwtGrantedAuthoritiesConverter
+             */
+            public void setJwtGrantedAuthoritiesConverter(
+                    Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter) {
+                Assert.notNull(jwtGrantedAuthoritiesConverter, "jwtGrantedAuthoritiesConverter cannot be null");
+                this.jwtGrantedAuthoritiesConverter = jwtGrantedAuthoritiesConverter;
+            }
+
+            /**
+             * Sets the principal claim name. Defaults to {@link JwtClaimNames#SUB}.
+             * @param principalClaimName The principal claim name
+             * @since 5.4
+             */
+            public void setPrincipalClaimName(String principalClaimName) {
+                Assert.hasText(principalClaimName, "principalClaimName cannot be empty");
+                this.principalClaimName = principalClaimName;
+            }
+
         }
-        return Collections.emptyList();
-    }
-
-    private Collection<String> getScopes(Jwt jwt) {
-        Object scopes = jwt.getClaims().get(SCOPE_CLAIM);
-        if (scopes instanceof String) {
-            return Arrays.stream(((String) scopes).split(SCOPE_SEPARATOR))
-                    .map(authority -> DEFAULT_SCOPE_PREFIX + authority.toUpperCase())
-                    .collect(Collectors.toList());
-        }
-        return Collections.emptyList();
-    }
-}
