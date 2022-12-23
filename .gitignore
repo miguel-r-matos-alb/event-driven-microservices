@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Logs ###
+config-server/logs/
+kafka-streams-service/logs/
+twitter-to-kafka-service/logs/
+
+${HOME}
