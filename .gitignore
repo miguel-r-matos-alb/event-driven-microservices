@@ -38,3 +38,5 @@ ${HOME}/
 config-server/logs/
 kafka-streams-service/logs/
 twitter-to-kafka-service/logs/
+
+config-server/src/main/resources/application.yml
