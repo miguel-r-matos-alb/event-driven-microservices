@@ -40,3 +40,4 @@ twitter-to-kafka-service/logs/
 ${HOME}
 
 twitter-to-kafka-service/src/main/resources/twitter4j.properties
+config-server/src/main/resources/application.yml
