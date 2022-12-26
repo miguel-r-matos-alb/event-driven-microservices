@@ -38,3 +38,5 @@ kafka-streams-service/logs/
 twitter-to-kafka-service/logs/
 
 ${HOME}
+
+twitter-to-kafka-service/src/main/resources/twitter4j.properties
