@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+twitter-to-kafka-service/src/main/resources/twitter4j.properties
+
+${HOME}/
+config-server/logs/
+kafka-streams-service/logs/
+twitter-to-kafka-service/logs/
