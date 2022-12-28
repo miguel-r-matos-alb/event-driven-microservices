@@ -36,8 +36,14 @@ build/
 config-server/logs/
 kafka-streams-service/logs/
 twitter-to-kafka-service/logs/
+elastic-query-web-client/logs/
+kafka-to-elastic-service/logs/
 
 ${HOME}
 
 twitter-to-kafka-service/src/main/resources/twitter4j.properties
+
+### configs with plain token, don't track on github ###
 config-server/src/main/resources/application.yml
+elastic-query-web-client/src/main/resources/application.yml
+kafka-to-elastic-service/src/main/resources/application.yml
