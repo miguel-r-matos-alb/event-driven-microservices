@@ -18,16 +18,15 @@
 		<module>common-util</module>
 		<module>elastic-query-service</module>
 		<module>elastic-query-web-client</module>
-		<module>elastic-query-service-common</module>
-		<module>elastic-query-web-client-common</module>
-		<module>reactive-elastic-query-service</module>
+		<!--module>elastic-query-service-common</module-->
+		<!--module>elastic-query-web-client-2</module-->
+		<!--module>elastic-query-web-client-common</module-->
+		<!--module>reactive-elastic-query-service</module>
 		<module>reactive-elastic-query-web-client</module>
-		<module>elastic-query-web-client-2</module>
-		<module>kafka-streams-service</module>
 		<module>analytics-service</module>
 		<module>discovery-service</module>
 		<module>gateway-service</module>
-		<module>mdc-interceptor</module>
+		<module>mdc-interceptor</module-->
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -82,7 +81,7 @@
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
 			<artifactId>logstash-logback-encoder</artifactId>
-			<version>${logstash-logback-encoder.version}</version>
+			<version>7.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -94,21 +93,21 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- LOCAL -->
-			<dependency>
+			<!--dependency>
 				<groupId>com.microservices.demo</groupId>
 				<artifactId>mdc-interceptor</artifactId>
 				<version>${project.version}</version>
-			</dependency>
-			<dependency>
+			</dependency-->
+			<!--dependency>
 				<groupId>com.microservices.demo</groupId>
 				<artifactId>elastic-query-web-client-common</artifactId>
 				<version>${project.version}</version>
-			</dependency>
-			<dependency>
+			</dependency-->
+			<!--dependency>
 				<groupId>com.microservices.demo</groupId>
 				<artifactId>elastic-query-service-common</artifactId>
 				<version>${project.version}</version>
-			</dependency>
+			</dependency-->
 			<dependency>
 				<groupId>com.microservices.demo</groupId>
 				<artifactId>common-util</artifactId>
@@ -382,7 +381,7 @@
 			<dependency>
 				<groupId>net.logstash.logback</groupId>
 				<artifactId>logstash-logback-encoder</artifactId>
-				<version>${logstash-logback-encoder.version}</version>
+				<version>7.2</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.annotation</groupId>

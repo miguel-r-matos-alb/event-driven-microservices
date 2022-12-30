@@ -46,12 +46,12 @@
                     </image>
                 </configuration>
                 <executions>
-                    <execution>
+                    <!--execution>
                         <phase>install</phase>
                         <goals>
                             <goal>build-image</goal>
                         </goals>
-                    </execution>
+                    </execution-->
                 </executions>
             </plugin>
         </plugins>
